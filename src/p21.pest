@@ -3,14 +3,12 @@
 
 WHITESPACE = _{ " " | "\t" | "\n" | "\r\n" }
 
-underscore = _{ "_" }
-
 // table 1. subsets of the basic alphabet
 
 space = _{ " " }
 digit = _{ '0'..'9' }
 lower = _{ 'a'..'z' }
-upper = _{ 'A'..'Z' }
+upper = _{ 'A'..'Z' | "_" }
 special = _{ 
        "!" | "\"" | "*" | "$" | "%" | "&" | "." | "#" | 
        "+" | ","  | "-" | "(" | ")" | "?" | "/" | ":" |
@@ -31,15 +29,15 @@ latin_codepoint = _{ space | digit | lower | upper |
 
 // table 2. token definitions
 
-user_defined_keyworkd = { "!" ~ upper ~ (upper | digit | underscore)* }
-standard_keyword = { upper ~ (upper | digit | underscore)* }
+user_defined_keyworkd = { "!" ~ upper ~ (upper | digit )* }
+standard_keyword = { upper ~ (upper | digit )* }
 keyword = { user_defined_keyworkd | standard_keyword }
 
 sign = _{ "+" | "-" }
 integer = { sign? ~ digit ~ digit* }
 real = { sign? ~ digit ~ digit* ~ "." ~ digit* ~ ("E" ~ sign? ~ digit ~ digit*)? }
 
-string = { "\'" ~ ( special | underscore | digit | space | lower | upper 
+string = { "\'" ~ ( special | digit | space | lower | upper 
     | /* high_codepoint |*/ apastrohpe{2} | reverse_solidus{2} 
     | control_directive )* ~ "\'" }
 
@@ -54,10 +52,10 @@ rhs_occurrence_name = { entity_instance_name | value_instance_name | constant_en
 
 uri_fragment_identifier = @{ !">" ~ ANY }
 anchor_name = { "<" ~ uri_fragment_identifier ~ ">" }
-tag_name = { (upper | lower) ~ (upper | lower | digit | underscore)* }
+tag_name = { (upper | lower) ~ (upper | lower | digit)* }
 universal_resource_identifier = { uri_fragment_identifier }  // not sure what's difference
 resource = { "<" ~ universal_resource_identifier ~ ">" }
-enumeration = { "." ~ upper ~ (upper | digit | underscore)* ~ "." }
+enumeration = { "." ~ upper ~ (upper | digit)* ~ "." }
 
 hex = { "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" |
         "8" | "9" | "A" | "B" | "C" | "D" | "E" | "F" 
